@@ -1,4 +1,4 @@
-site_name: Plantilla para Documentación
+site_name: Lab Log - Embedded Systems I
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
