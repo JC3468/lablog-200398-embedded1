@@ -1,0 +1,1188 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../2026-09-16-s08/">
+      
+      
+        <link rel="next" href="../2026-09-30-pwm/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Timers — Repeating Timer on GP15 (Predict vs Measure) - Lab Log - Embedded Systems I</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css">
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#timers-repeating-timer-on-gp15-predict-vs-measure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Lab Log - Embedded Systems I" class="md-header__button md-logo" aria-label="Lab Log - Embedded Systems I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Lab Log - Embedded Systems I
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Timers — Repeating Timer on GP15 (Predict vs Measure)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Lab Log - Embedded Systems I" class="md-nav__button md-logo" aria-label="Lab Log - Embedded Systems I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Lab Log - Embedded Systems I
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab Log - Embedded Systems I
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exams
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exams
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exams/exam1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blackout 3×3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sessions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sessions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2026-08-24-s03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPIO Control — Outputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2026-09-02-s06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Inputs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2026-09-16-s08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session 8 — Interrupt-Driven LED Roulette (Speed Control + Center Stop)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers — Repeating Timer on GP15 (Predict vs Measure)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers — Repeating Timer on GP15 (Predict vs Measure)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-did" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I did
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predicted-vs-measured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predicted vs measured
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-went-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What went wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open question
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2026-09-30-pwm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PWM — LED Fade, Clock Divider and an 8-Key Piano (Predict vs Measure)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADC — LDR, Electret Noise Detector, Potentiometer Angle and NTC Temperature
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../i2c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I2C — Reading a DS1307 RTC and an MPU6050 on the Same Bus (Wokwi)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UART — Two-Pico Button/LED Mirror
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Useful things
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Useful things
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../useful%20things/comandos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encabezados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../useful%20things/gitcmds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚀 Comandos básicos de Git (primeros pasos)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-did" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I did
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predicted-vs-measured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predicted vs measured
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-went-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What went wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open question
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="timers-repeating-timer-on-gp15-predict-vs-measure">Timers — Repeating Timer on GP15 (Predict vs Measure)</h1>
+<p><strong>Goal (one sentence):</strong> Generate a square wave on GP15 from an SDK repeating timer (no <code>sleep_ms</code> in the loop), predict its period, frequency and duty cycle from <code>TOGGLE_MS</code>, and check the prediction on the oscilloscope.</p>
+<hr />
+<h2 id="prediction">Prediction</h2>
+<p>The callback toggles GP15 once every <code>TOGGLE_MS</code>, so one full period is one HIGH plus one LOW:</p>
+<ul>
+<li><code>T = 2 · TOGGLE_MS</code>  <code>f = 1 / T = 1000 / (2 · TOGGLE_MS)</code> Hz  duty = 50 % (HIGH and LOW both last <code>TOGGLE_MS</code>)</li>
+<li><code>TOGGLE_MS = 250</code> → HIGH = LOW = 250 ms, <strong>T = 500 ms</strong>, <strong>f = 1000 / 500 = 2.000 Hz</strong></li>
+<li><code>TOGGLE_MS = 10</code> → HIGH = LOW = 10 ms, <strong>T = 20 ms</strong>, <strong>f = 1000 / 20 = 50.00 Hz</strong></li>
+</ul>
+<p>With a negative delay (<code>-TOGGLE_MS</code>) the callbacks are scheduled start-to-start, so I expected <strong>no drift</strong>: at most a few µs of jitter from interrupt latency on each edge.</p>
+<h2 id="setup">Setup</h2>
+<ul>
+<li>Pin map: GP15 → scope CH1 (timer output); scope ground → a Pico GND pin only. GP14 (CH2 callback marker) was not used in these captures.</li>
+<li>Photo of the breadboard: <em>not taken this session</em> (only the Pico and the probe on GP15 / GND).</li>
+<li>Non-default: none. Default 150 MHz <code>clk_sys</code>, timer at its default 1 µs tick, no pulls, no external parts. Scope at 5 kS/s, 10k points, trigger on CH1 rising edge.</li>
+</ul>
+<h2 id="what-i-did">What I did</h2>
+<ol>
+<li>Copied the course repeating-timer code, set <code>OUT_PIN = 15</code>, <code>TOGGLE_MS = 250</code>, <code>add_repeating_timer_ms(-TOGGLE_MS, …)</code>.</li>
+<li>Built and flashed; probed GP15 on CH1, 200 ms/div, added Frequency / Period / +Width / −Width measurements → E1.</li>
+<li>Changed only <code>TOGGLE_MS</code> to <code>10</code>, rebuilt and flashed.</li>
+<li>Zoomed in 50× (4 ms/div) on the 200 ms/div record → E2.</li>
+<li>Saved a second capture 3 s later to check repeatability → E3.</li>
+</ol>
+<hr />
+<h2 id="evidence">Evidence</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>What it shows</th>
+<th>Cursor / measured value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E1</td>
+<td><code>img/timers_scope1.png</code></td>
+<td><code>TOGGLE_MS = 250</code>, four full periods at 200 ms/div</td>
+<td>f = 2.000 Hz, T = 500.0 ms, +W = 250.0 ms, −W = 250.0 ms</td>
+</tr>
+<tr>
+<td>E2</td>
+<td><code>img/timers_scope2.png</code></td>
+<td><code>TOGGLE_MS = 10</code>, 50× zoom (4 ms/div)</td>
+<td>f = 50.00 Hz, T = 20.00 ms, +W = 10.00 ms, −W = 9.995 ms, σ(T) = 1.939 µs</td>
+</tr>
+<tr>
+<td>E3</td>
+<td><code>img/timers_scope3.png</code></td>
+<td>Same as E2, captured 3 s later</td>
+<td>f = 50.01 Hz, T = 20.00 ms, +W = 9.999 ms, −W = 9.999 ms, σ(T) = 1.914 µs</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="E1 — TOGGLE_MS = 250 ms: 2 Hz, 50 % duty" src="../../img/timers_scope1.png" /></p>
+<p><img alt="E2 — TOGGLE_MS = 10 ms: 50 Hz, zoom 50×" src="../../img/timers_scope2.png" /></p>
+<p><img alt="E3 — TOGGLE_MS = 10 ms, 3 s later" src="../../img/timers_scope3.png" /></p>
+<h2 id="predicted-vs-measured">Predicted vs measured</h2>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Predicted</th>
+<th>Measured (evidence #)</th>
+<th>Error %</th>
+<th>Why the difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Period, <code>TOGGLE_MS = 250</code></td>
+<td>500 ms</td>
+<td>500.0 ms (E1)</td>
+<td>0.00 %</td>
+<td>Real error is µs-level; the 4-digit readout resolves only 0.1 ms</td>
+</tr>
+<tr>
+<td>Frequency, <code>TOGGLE_MS = 250</code></td>
+<td>2.000 Hz</td>
+<td>2.000 Hz (E1)</td>
+<td>0.00 %</td>
+<td>Same as above</td>
+</tr>
+<tr>
+<td>HIGH / LOW, <code>TOGGLE_MS = 250</code></td>
+<td>250 / 250 ms</td>
+<td>250.0 / 250.0 ms (E1)</td>
+<td>0.00 %</td>
+<td>50 % duty, as expected from a toggle</td>
+</tr>
+<tr>
+<td>Period, <code>TOGGLE_MS = 10</code></td>
+<td>20 ms</td>
+<td>20.00 ms (E2, E3)</td>
+<td>0.00 %</td>
+<td>σ ≈ 1.9 µs is interrupt-latency jitter, far below 10 µs display step</td>
+</tr>
+<tr>
+<td>Frequency, <code>TOGGLE_MS = 10</code></td>
+<td>50.00 Hz</td>
+<td>50.00 Hz (E2) / 50.01 Hz (E3)</td>
+<td>0.00 % / +0.02 %</td>
+<td>Last-digit variation between captures (jitter + scope rounding)</td>
+</tr>
+<tr>
+<td>LOW time, <code>TOGGLE_MS = 10</code></td>
+<td>10 ms</td>
+<td>9.995 ms (E2) / 9.999 ms (E3)</td>
+<td>−0.05 % / −0.01 %</td>
+<td>5 kS/s = 200 µs per sample; the edge position is interpolated, so a few µs of jitter shows up</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusion:</strong> <code>T = 2 · t_toggle</code> and <code>f = 1 / (2 · t_toggle)</code> hold for both values; the waveform is a clean 50 % square wave and changing <code>TOGGLE_MS</code> is the only thing needed to move the frequency.</p>
+<h2 id="what-went-wrong">What went wrong</h2>
+<ul>
+<li><strong>"Too perfect" readings — we couldn't see any delay:</strong> we expected something like 500.12 ms or 501 ms (callback/interrupt overhead adding up), but E1 reads exactly <strong>500.0 ms</strong> and E2 exactly <strong>20.00 ms</strong>. At first we thought the scope was "correcting" the value. What we found by looking at the numbers again:<ul>
+<li>The readout has only 4 digits: at 500.0 ms the smallest step is <strong>100 µs</strong>, and at 20.00 ms it is 10 µs. Anything smaller is rounded away.</li>
+<li>The sampling is 5 kS/s → <strong>200 µs between samples</strong> (see the 5.00 kS/s field annotated in E2), so a few µs of shift on an edge cannot be resolved visually.</li>
+<li>The actual error <em>is</em> tiny: with <code>-TOGGLE_MS</code> each deadline is <code>previous deadline + TOGGLE_MS</code>, so the ISR latency (a few µs at 150 MHz) causes <strong>jitter, not drift</strong> — it doesn't accumulate. The only place it shows is the <strong>Std Dev</strong> column: σ(T) ≈ 1.9 µs in E2/E3.</li>
+<li>Fix / how to see it next time: use a faster timebase (e.g. 1–10 µs/div around one edge, ≥ 1 MS/s) and read Std Dev or Min/Max instead of the <code>Value</code> column.</li>
+</ul>
+</li>
+<li><strong>Polluted statistics in E1:</strong> the Mean/Min/Max columns in E1 show impossible values (Min period 2.4 ms, Max frequency 416.7 Hz, Mean 14.55 Hz) for a 2 Hz signal. Those come from samples taken before the signal was stable (probe being connected / previous program), and the statistics were never reset. We trusted only the <code>Value</code> column for E1; next time press <em>Reset Statistics</em> after the signal settles.</li>
+</ul>
+<h2 id="code">Code</h2>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">#define OUT_PIN    15</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="cp">#define TOGGLE_MS  250          </span><span class="c1">// only line changed between runs (250 → 10)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">toggle_cb</span><span class="p">(</span><span class="n">repeating_timer_t</span><span class="w"> </span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">level</span><span class="p">;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">gpio_put</span><span class="p">(</span><span class="n">OUT_PIN</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="p">);</span><span class="w">   </span><span class="c1">// short callback, no sleeps</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w">                </span><span class="c1">// keep repeating</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="n">repeating_timer_t</span><span class="w"> </span><span class="n">timer</span><span class="p">;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="c1">// negative delay: start-to-start scheduling → jitter but no drift</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="n">add_repeating_timer_ms</span><span class="p">(</span><span class="o">-</span><span class="n">TOGGLE_MS</span><span class="p">,</span><span class="w"> </span><span class="n">toggle_cb</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">timer</span><span class="p">);</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="n">tight_loop_contents</span><span class="p">();</span><span class="w">   </span><span class="c1">// main() is free</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Full file at <code>src/timers/timers.c</code>.</p>
+<h2 id="open-question">Open question</h2>
+<p>If the callback had real work in it (e.g. a 20 ms <code>busy_wait_ms</code>), how big would the difference between <code>-100</code> and <code>+100</code> be on the scope? With a positive delay the callback time should add to every period (≈ 120 ms instead of 100 ms per toggle) — that one should be large enough to see even at this scope resolution, unlike the µs-level jitter above. Want to measure it with the GP14 marker on CH2.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
